@@ -2,13 +2,6 @@ import React from 'react';
 import { Card, ListGroup, Badge } from 'react-bootstrap';
 import BalanceOperation from './BalanceOperation';
 
-/**
- * Компонент для отображения списка игроков с их балансами
- * @param {Array} players - Массив игроков (places)
- * @param {number} deviceId - ID девайса
- * @param {Function} onBalanceUpdate - Callback при обновлении баланса
- * @param {boolean} show - Флаг для анимации появления
- */
 const PlayerList = ({ players, deviceId, onBalanceUpdate, show = true }) => {
   if (!players || players.length === 0) {
     return (
@@ -20,7 +13,6 @@ const PlayerList = ({ players, deviceId, onBalanceUpdate, show = true }) => {
     );
   }
 
-  // Форматирование баланса для отображения
   const formatBalance = (balance) => {
     return new Intl.NumberFormat('ru-RU', {
       minimumFractionDigits: 2,
@@ -43,10 +35,10 @@ const PlayerList = ({ players, deviceId, onBalanceUpdate, show = true }) => {
                 animation: show ? `fadeInUp 0.4s ease ${index * 0.1}s both` : 'none',
               }}
             >
-              <div className="d-flex justify-content-between align-items-start mb-3">
-                <div>
-                  <h6 className="mb-1">{player.name}</h6>
-                  <Badge bg="primary" className="fs-6">
+              <div className="d-flex justify-content-between align-items-start mb-3 flex-wrap">
+                <div className="w-100 mb-2 mb-md-0">
+                  <h6 className="mb-2">{player.name}</h6>
+                  <Badge bg="primary" className="fs-6 d-inline-block">
                     Баланс: {formatBalance(player.balance)} {player.currency || '₽'}
                   </Badge>
                 </div>
@@ -66,4 +58,3 @@ const PlayerList = ({ players, deviceId, onBalanceUpdate, show = true }) => {
 };
 
 export default PlayerList;
-

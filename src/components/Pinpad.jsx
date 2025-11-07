@@ -1,55 +1,28 @@
 import React from 'react';
 import { Button, Card } from 'react-bootstrap';
 
-/**
- * Компонент цифрового пинпада для ввода суммы
- * Бонусная функция для удобного ввода сумм
- * 
- * @param {string} value - Текущее значение суммы
- * @param {Function} onChange - Callback при изменении значения
- * @param {Function} onDeposit - Callback для операции пополнения
- * @param {Function} onWithdraw - Callback для операции снятия
- * @param {boolean} loading - Флаг загрузки
- * @param {boolean} disabled - Флаг отключения
- */
 const Pinpad = ({ value, onChange, onDeposit, onWithdraw, loading, disabled }) => {
-  /**
-   * Обработка нажатия цифры
-   */
   const handleNumberClick = (num) => {
     if (disabled || loading) return;
-    
     const newValue = value === '' ? num.toString() : value + num;
     onChange(newValue);
   };
 
-  /**
-   * Обработка нажатия точки/запятой
-   */
   const handleDecimalClick = () => {
     if (disabled || loading) return;
-    
-    // Проверяем, что точка еще не добавлена
     if (!value.includes('.')) {
       const newValue = value === '' ? '0.' : value + '.';
       onChange(newValue);
     }
   };
 
-  /**
-   * Обработка удаления последнего символа
-   */
   const handleBackspace = () => {
     if (disabled || loading) return;
-    
     if (value.length > 0) {
       onChange(value.slice(0, -1));
     }
   };
 
-  /**
-   * Обработка очистки
-   */
   const handleClear = () => {
     if (disabled || loading) return;
     onChange('');
@@ -58,19 +31,17 @@ const Pinpad = ({ value, onChange, onDeposit, onWithdraw, loading, disabled }) =
   return (
     <Card className="border">
       <Card.Body className="p-2">
-        {/* Дисплей с текущим значением */}
-        <div className="bg-light border rounded p-3 mb-2 text-end">
-          <span className="fs-4 fw-bold">
+        <div className="bg-light border rounded p-3 mb-2 text-end pinpad-display">
+          <span className="fs-4 fw-bold d-block">
             {value || '0.00'}
           </span>
         </div>
 
-        {/* Цифровая клавиатура */}
         <div className="row g-2 mb-2">
           <div className="col-4">
             <Button
               variant="outline-secondary"
-              className="w-100"
+              className="w-100 pinpad-button"
               onClick={() => handleNumberClick('7')}
               disabled={disabled || loading}
             >
@@ -80,7 +51,7 @@ const Pinpad = ({ value, onChange, onDeposit, onWithdraw, loading, disabled }) =
           <div className="col-4">
             <Button
               variant="outline-secondary"
-              className="w-100"
+              className="w-100 pinpad-button"
               onClick={() => handleNumberClick('8')}
               disabled={disabled || loading}
             >
@@ -90,7 +61,7 @@ const Pinpad = ({ value, onChange, onDeposit, onWithdraw, loading, disabled }) =
           <div className="col-4">
             <Button
               variant="outline-secondary"
-              className="w-100"
+              className="w-100 pinpad-button"
               onClick={() => handleNumberClick('9')}
               disabled={disabled || loading}
             >
@@ -100,7 +71,7 @@ const Pinpad = ({ value, onChange, onDeposit, onWithdraw, loading, disabled }) =
           <div className="col-4">
             <Button
               variant="outline-secondary"
-              className="w-100"
+              className="w-100 pinpad-button"
               onClick={() => handleNumberClick('4')}
               disabled={disabled || loading}
             >
@@ -110,7 +81,7 @@ const Pinpad = ({ value, onChange, onDeposit, onWithdraw, loading, disabled }) =
           <div className="col-4">
             <Button
               variant="outline-secondary"
-              className="w-100"
+              className="w-100 pinpad-button"
               onClick={() => handleNumberClick('5')}
               disabled={disabled || loading}
             >
@@ -120,7 +91,7 @@ const Pinpad = ({ value, onChange, onDeposit, onWithdraw, loading, disabled }) =
           <div className="col-4">
             <Button
               variant="outline-secondary"
-              className="w-100"
+              className="w-100 pinpad-button"
               onClick={() => handleNumberClick('6')}
               disabled={disabled || loading}
             >
@@ -130,7 +101,7 @@ const Pinpad = ({ value, onChange, onDeposit, onWithdraw, loading, disabled }) =
           <div className="col-4">
             <Button
               variant="outline-secondary"
-              className="w-100"
+              className="w-100 pinpad-button"
               onClick={() => handleNumberClick('1')}
               disabled={disabled || loading}
             >
@@ -140,7 +111,7 @@ const Pinpad = ({ value, onChange, onDeposit, onWithdraw, loading, disabled }) =
           <div className="col-4">
             <Button
               variant="outline-secondary"
-              className="w-100"
+              className="w-100 pinpad-button"
               onClick={() => handleNumberClick('2')}
               disabled={disabled || loading}
             >
@@ -150,7 +121,7 @@ const Pinpad = ({ value, onChange, onDeposit, onWithdraw, loading, disabled }) =
           <div className="col-4">
             <Button
               variant="outline-secondary"
-              className="w-100"
+              className="w-100 pinpad-button"
               onClick={() => handleNumberClick('3')}
               disabled={disabled || loading}
             >
@@ -160,7 +131,7 @@ const Pinpad = ({ value, onChange, onDeposit, onWithdraw, loading, disabled }) =
           <div className="col-4">
             <Button
               variant="outline-secondary"
-              className="w-100"
+              className="w-100 pinpad-button"
               onClick={() => handleNumberClick('0')}
               disabled={disabled || loading}
             >
@@ -170,7 +141,7 @@ const Pinpad = ({ value, onChange, onDeposit, onWithdraw, loading, disabled }) =
           <div className="col-4">
             <Button
               variant="outline-secondary"
-              className="w-100"
+              className="w-100 pinpad-button"
               onClick={handleDecimalClick}
               disabled={disabled || loading}
             >
@@ -180,7 +151,7 @@ const Pinpad = ({ value, onChange, onDeposit, onWithdraw, loading, disabled }) =
           <div className="col-4">
             <Button
               variant="outline-danger"
-              className="w-100"
+              className="w-100 pinpad-button"
               onClick={handleBackspace}
               disabled={disabled || loading}
             >
@@ -189,7 +160,6 @@ const Pinpad = ({ value, onChange, onDeposit, onWithdraw, loading, disabled }) =
           </div>
         </div>
 
-        {/* Кнопки управления */}
         <div className="row g-2 mb-2">
           <div className="col-6">
             <Button
@@ -203,7 +173,6 @@ const Pinpad = ({ value, onChange, onDeposit, onWithdraw, loading, disabled }) =
           </div>
         </div>
 
-        {/* Кнопки операций */}
         <div className="row g-2">
           <div className="col-6">
             <Button
@@ -232,4 +201,3 @@ const Pinpad = ({ value, onChange, onDeposit, onWithdraw, loading, disabled }) =
 };
 
 export default Pinpad;
-

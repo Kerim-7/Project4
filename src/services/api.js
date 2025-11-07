@@ -1,24 +1,17 @@
 /**
- * API сервис для работы с девайсами и местами (places)
- * Соответствует Swagger документации: https://dev-space.su/swagger/index.html
+ * API сервис для работы с девайсами и местами
+ * Swagger: https://dev-space.su/swagger/index.html
  * 
  * Структура данных:
- * - Device: { id, name, created_at, updated_at, places: DevicePlace[] }
- * - DevicePlace: { device_id, place, balances, currency }
+ * Device: { id, name, created_at, updated_at, places: DevicePlace[] }
+ * DevicePlace: { device_id, place, balances, currency }
  */
 
-// Базовый URL API (для реального использования)
 const API_BASE_URL = 'https://dev-space.su/api/v1';
-
-// Флаг для переключения между mock и реальным API
-// Установите USE_REAL_API = true для работы с реальным API
 const USE_REAL_API = true;
 
-// Имитация задержки сети
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-// Mock данные девайсов с places
-// В реальном приложении это будет приходить с сервера
 const mockDevices = [
   {
     id: 1,
@@ -63,10 +56,7 @@ const mockDevices = [
   },
 ];
 
-/**
- * Обработка ошибок API
- */
-const handleApiError = (error, response) => {
+const handleApiError = async (error, response) => {
   if (!response) {
     return {
       success: false,
@@ -75,20 +65,34 @@ const handleApiError = (error, response) => {
   }
   
   if (!response.ok) {
+    let errorMessage = `Ошибка сервера: ${response.status} ${response.statusText}`;
+    try {
+      const errorData = await response.json();
+      if (errorData.err) {
+        errorMessage = errorData.err;
+      } else if (errorData.message) {
+        errorMessage = errorData.message;
+      }
+    } catch (e) {
+      try {
+        const errorText = await response.text();
+        if (errorText) {
+          errorMessage = errorText;
+        }
+      } catch (e2) {
+        // Fallback to default message
+      }
+    }
+    
     return {
       success: false,
-      error: `Ошибка сервера: ${response.status} ${response.statusText}`,
+      error: errorMessage,
     };
   }
   
   return null;
 };
 
-/**
- * GET /a/devices/
- * Получить список всех девайсов
- * @returns {Promise<{success: boolean, data?: Device[], error?: string}>}
- */
 export const getDevices = async () => {
   if (USE_REAL_API) {
     try {
@@ -99,7 +103,7 @@ export const getDevices = async () => {
         },
       });
       
-      const error = handleApiError(null, response);
+      const error = await handleApiError(null, response);
       if (error) return error;
       
       const data = await response.json();
@@ -115,7 +119,6 @@ export const getDevices = async () => {
     }
   }
   
-  // Mock режим
   await delay(500);
   return {
     success: true,
@@ -123,12 +126,6 @@ export const getDevices = async () => {
   };
 };
 
-/**
- * GET /a/devices/{device_id}/
- * Получить конкретный девайс с его местами
- * @param {number} deviceId - ID девайса
- * @returns {Promise<{success: boolean, data?: Device, error?: string}>}
- */
 export const getDevice = async (deviceId) => {
   if (USE_REAL_API) {
     try {
@@ -139,7 +136,7 @@ export const getDevice = async (deviceId) => {
         },
       });
       
-      const error = handleApiError(null, response);
+      const error = await handleApiError(null, response);
       if (error) return error;
       
       const data = await response.json();
@@ -155,7 +152,6 @@ export const getDevice = async (deviceId) => {
     }
   }
   
-  // Mock режим
   await delay(300);
   const device = mockDevices.find(d => d.id === deviceId);
   if (!device) {
@@ -172,15 +168,10 @@ export const getDevice = async (deviceId) => {
 };
 
 /**
- * POST /a/devices/{device_id}/place/{place_id}/update
- * Обновить баланс для конкретного места на девайсе
- * @param {number} deviceId - ID девайса
- * @param {number} placeId - ID места (place)
- * @param {number} delta - Изменение баланса (положительное для пополнения, отрицательное для снятия)
- * @returns {Promise<{success: boolean, data?: {device_id, place, newBalance}, error?: string}>}
+ * Обновление баланса места
+ * @param {number} delta - положительное для пополнения, отрицательное для снятия
  */
 export const updatePlaceBalance = async (deviceId, placeId, delta) => {
-  // Валидация delta
   if (delta === 0) {
     return {
       success: false,
@@ -201,12 +192,11 @@ export const updatePlaceBalance = async (deviceId, placeId, delta) => {
         }
       );
       
-      const error = handleApiError(null, response);
+      const error = await handleApiError(null, response);
       if (error) return error;
       
       const data = await response.json();
       
-      // Проверка на ошибки в ответе API
       if (data.err) {
         return {
           success: false,
@@ -226,10 +216,8 @@ export const updatePlaceBalance = async (deviceId, placeId, delta) => {
     }
   }
   
-  // Mock режим
   await delay(400);
   
-  // Найти девайс
   const device = mockDevices.find(d => d.id === deviceId);
   if (!device) {
     return {
@@ -238,7 +226,6 @@ export const updatePlaceBalance = async (deviceId, placeId, delta) => {
     };
   }
   
-  // Найти место
   const place = device.places.find(p => p.place === placeId);
   if (!place) {
     return {
@@ -247,7 +234,6 @@ export const updatePlaceBalance = async (deviceId, placeId, delta) => {
     };
   }
   
-  // Проверка на недостаточность средств при снятии
   if (delta < 0 && Math.abs(delta) > place.balances) {
     return {
       success: false,
@@ -255,7 +241,6 @@ export const updatePlaceBalance = async (deviceId, placeId, delta) => {
     };
   }
   
-  // Обновление баланса
   const newBalance = place.balances + delta;
   place.balances = newBalance;
   
@@ -271,10 +256,8 @@ export const updatePlaceBalance = async (deviceId, placeId, delta) => {
 };
 
 /**
- * Вспомогательная функция для получения мест девайса
- * Преобразует places в формат для отображения (с именами игроков)
- * @param {number} deviceId - ID девайса
- * @returns {Promise<{success: boolean, data: Array}>}
+ * Преобразует places в формат для отображения
+ * В продакшене имена могут приходить с сервера
  */
 export const getPlacesByDevice = async (deviceId) => {
   const result = await getDevice(deviceId);
@@ -283,16 +266,29 @@ export const getPlacesByDevice = async (deviceId) => {
     return result;
   }
   
-  // Преобразуем places в формат для отображения
-  // В реальном приложении имена могут приходить с сервера
-  const places = result.data.places.map((place, index) => ({
-    id: place.place, // Используем place как id
-    place: place.place,
-    name: `Игрок ${place.place}`, // Или можно использовать другое имя
-    balance: place.balances,
-    currency: place.currency,
-    device_id: place.device_id,
-  }));
+  const playerNames = [
+    'Александр', 'Мария', 'Дмитрий', 'Анна', 'Иван', 'Елена', 'Сергей', 'Ольга',
+    'Андрей', 'Татьяна', 'Михаил', 'Наталья', 'Владимир', 'Екатерина', 'Алексей', 'Юлия',
+    'Павел', 'Ирина', 'Николай', 'Светлана', 'Роман', 'Марина', 'Артем', 'Анастасия',
+    'Максим', 'Виктория', 'Денис', 'Кристина', 'Антон', 'Алина', 'Игорь', 'Дарья',
+    'Олег', 'Полина', 'Юрий', 'Валерия', 'Станислав', 'София', 'Вадим', 'Анжела',
+    'Григорий', 'Евгения', 'Борис', 'Людмила', 'Константин', 'Галина', 'Василий', 'Лариса'
+  ];
+  
+  let nameIndex = (deviceId - 1) * 10;
+  
+  const places = result.data.places.map((place) => {
+    const name = playerNames[nameIndex % playerNames.length] || `Игрок ${deviceId}-${place.place}`;
+    nameIndex++;
+    return {
+      id: place.place,
+      place: place.place,
+      name: name,
+      balance: place.balances,
+      currency: place.currency,
+      device_id: place.device_id,
+    };
+  });
   
   return {
     success: true,

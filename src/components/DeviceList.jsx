@@ -1,13 +1,6 @@
 import React from 'react';
 import { Card, Badge, Spinner, Alert } from 'react-bootstrap';
 
-/**
- * Компонент для отображения списка девайсов
- * @param {Array} devices - Массив девайсов
- * @param {Function} onDeviceSelect - Callback при выборе девайса
- * @param {number} selectedDeviceId - ID выбранного девайса
- * @param {boolean} loading - Флаг загрузки
- */
 const DeviceList = ({ devices, onDeviceSelect, selectedDeviceId, loading }) => {
   if (loading) {
     return (
@@ -39,10 +32,10 @@ const DeviceList = ({ devices, onDeviceSelect, selectedDeviceId, loading }) => {
             style={{ cursor: 'pointer', transition: 'all 0.3s' }}
           >
             <Card.Body>
-              <Card.Title className="d-flex justify-content-between align-items-start">
-                <span>{device.name}</span>
+              <Card.Title className="d-flex justify-content-between align-items-start flex-wrap">
+                <span className="me-2 mb-1">{device.name}</span>
                 {device.places && (
-                  <Badge bg="info">
+                  <Badge bg="info" className="mb-1">
                     {device.places.length} {device.places.length === 1 ? 'место' : 'мест'}
                   </Badge>
                 )}
@@ -65,4 +58,3 @@ const DeviceList = ({ devices, onDeviceSelect, selectedDeviceId, loading }) => {
 };
 
 export default DeviceList;
-

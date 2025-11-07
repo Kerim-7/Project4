@@ -25,20 +25,6 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
 }
 
-/* Адаптивные стили для мобильных устройств */
-@media (max-width: 768px) {
-  .container {
-    padding-left: 15px;
-    padding-right: 15px;
-  }
-
-  /* Улучшение отображения пинпада на мобильных */
-  .pinpad-button {
-    min-height: 50px;
-    font-size: 1.2rem;
-  }
-}
-
 /* Стили для улучшения читаемости */
 .card {
   border-radius: 8px;
@@ -68,5 +54,280 @@ button, .card {
 .pinpad-display {
   font-family: 'Courier New', monospace;
   letter-spacing: 1px;
+}
+
+/* ============================================
+   АДАПТИВНЫЙ ДИЗАЙН
+   ============================================ */
+
+/* Базовые стили для всех устройств */
+.App {
+  min-height: 100vh;
+}
+
+/* Планшеты и маленькие десктопы (до 992px) */
+@media (max-width: 991.98px) {
+  .container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  
+  h2 {
+    font-size: 1.75rem;
+  }
+  
+  .card-title {
+    font-size: 1.1rem;
+  }
+}
+
+/* Планшеты (768px - 991px) */
+@media (min-width: 768px) and (max-width: 991.98px) {
+  .card-body {
+    padding: 1rem;
+  }
+}
+
+/* Мобильные устройства (до 767px) */
+@media (max-width: 767.98px) {
+  /* Контейнер */
+  .container {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+  
+  /* Заголовки */
+  h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem !important;
+  }
+  
+  h5 {
+    font-size: 1.1rem;
+  }
+  
+  h6 {
+    font-size: 1rem;
+  }
+  
+  /* Навбар */
+  .navbar-brand {
+    font-size: 1rem;
+  }
+  
+  /* Карточки девайсов */
+  .card {
+    margin-bottom: 0.75rem;
+  }
+  
+  .card-body {
+    padding: 1rem;
+  }
+  
+  .card-title {
+    font-size: 1rem;
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 0.5rem;
+  }
+  
+  .card-title .badge {
+    font-size: 0.75rem;
+  }
+  
+  /* Список игроков */
+  .list-group-item {
+    padding: 1rem 0.75rem !important;
+  }
+  
+  .list-group-item h6 {
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .list-group-item .badge {
+    font-size: 0.85rem;
+    padding: 0.4em 0.6em;
+  }
+  
+  /* Кнопки */
+  .btn {
+    font-size: 0.9rem;
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .btn-sm {
+    font-size: 0.8rem;
+    padding: 0.25rem 0.5rem;
+  }
+  
+  /* Формы */
+  .form-label {
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .form-control {
+    font-size: 1rem;
+    padding: 0.6rem 0.75rem;
+  }
+  
+  .form-text {
+    font-size: 0.8rem;
+  }
+  
+  /* Пинпад */
+  .pinpad-button {
+    min-height: 50px;
+    font-size: 1.1rem;
+    padding: 0.75rem;
+  }
+  
+  .pinpad-display {
+    font-size: 1.5rem;
+    padding: 0.75rem;
+  }
+  
+  /* Алерты */
+  .alert {
+    font-size: 0.9rem;
+    padding: 0.75rem 1rem;
+  }
+  
+  /* Отступы */
+  .mb-3 {
+    margin-bottom: 0.75rem !important;
+  }
+  
+  .mb-4 {
+    margin-bottom: 1rem !important;
+  }
+  
+  .mt-4 {
+    margin-top: 1rem !important;
+  }
+  
+  /* Кнопка возврата */
+  .btn-outline-secondary {
+    font-size: 0.85rem;
+    padding: 0.4rem 0.75rem;
+  }
+  
+  /* InputGroup */
+  .input-group .btn {
+    padding: 0.5rem 0.75rem;
+  }
+  
+  /* Спиннер */
+  .spinner-border {
+    width: 2rem;
+    height: 2rem;
+  }
+}
+
+/* Очень маленькие мобильные устройства (до 576px) */
+@media (max-width: 575.98px) {
+  .container {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  
+  h2 {
+    font-size: 1.25rem;
+  }
+  
+  .navbar-brand {
+    font-size: 0.9rem;
+  }
+  
+  .card-body {
+    padding: 0.75rem;
+  }
+  
+  .list-group-item {
+    padding: 0.75rem 0.5rem !important;
+  }
+  
+  .btn {
+    font-size: 0.85rem;
+    padding: 0.45rem 0.65rem;
+  }
+  
+  .pinpad-button {
+    min-height: 45px;
+    font-size: 1rem;
+    padding: 0.6rem;
+  }
+  
+  .pinpad-display {
+    font-size: 1.3rem;
+    padding: 0.6rem;
+  }
+  
+  /* Кнопки операций в одну колонку на очень маленьких экранах */
+  .balance-operation-buttons {
+    flex-direction: column;
+  }
+  
+  .balance-operation-buttons .col-6 {
+    flex: 0 0 100%;
+    max-width: 100%;
+    margin-bottom: 0.5rem;
+  }
+  
+  .balance-operation-buttons .col-6:last-child {
+    margin-bottom: 0;
+  }
+}
+
+/* Большие десктопы (от 1200px) */
+@media (min-width: 1200px) {
+  .container {
+    max-width: 1140px;
+  }
+  
+  .card-body {
+    padding: 1.5rem;
+  }
+}
+
+/* Очень большие экраны (от 1400px) */
+@media (min-width: 1400px) {
+  .container {
+    max-width: 1320px;
+  }
+}
+
+/* Улучшение для touch-устройств */
+@media (hover: none) and (pointer: coarse) {
+  .btn, .card.cursor-pointer {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+  }
+  
+  .btn:active, .card.cursor-pointer:active {
+    transform: scale(0.98);
+  }
+  
+  /* Увеличиваем область нажатия для мобильных */
+  .btn {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Ландшафтная ориентация на мобильных */
+@media (max-width: 767.98px) and (orientation: landscape) {
+  .navbar {
+    padding: 0.25rem 0;
+  }
+  
+  .container {
+    padding-top: 0.5rem;
+  }
+  
+  h2 {
+    font-size: 1.3rem;
+    margin-bottom: 0.75rem !important;
+  }
 }
 

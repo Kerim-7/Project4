@@ -4,20 +4,11 @@ import Pinpad from './Pinpad';
 import { updatePlaceBalance } from '../services/api';
 
 /**
- * Компонент для выполнения операций с балансом игрока (места)
- * 
- * Валидация суммы до 2 знаков после запятой важна в финансовых приложениях по следующим причинам:
- * 1. Стандарт валют: большинство валют (рубль, доллар, евро) используют 2 знака после запятой
- * 2. Предотвращение ошибок округления: точность до 2 знаков исключает проблемы с плавающей точкой
- * 3. Соответствие банковским стандартам: банки и платежные системы работают с 2 знаками
- * 4. Удобство для пользователей: понятный формат отображения денежных сумм
- * 5. Защита от ошибок: ограничение предотвращает случайный ввод слишком точных значений
- * 6. Аудит и отчетность: упрощает ведение финансовой отчетности
- * 
- * @param {number} deviceId - ID девайса
- * @param {number} placeId - ID места (place)
- * @param {number} currentBalance - Текущий баланс
- * @param {Function} onBalanceUpdate - Callback при успешном обновлении баланса
+ * Валидация до 2 знаков после запятой критична для финансовых операций:
+ * - Соответствие стандартам валют (RUB, USD, EUR)
+ * - Предотвращение ошибок округления с плавающей точкой
+ * - Соответствие банковским стандартам
+ * - Упрощение аудита и отчетности
  */
 const BalanceOperation = ({ deviceId, placeId, currentBalance, onBalanceUpdate }) => {
   const [amount, setAmount] = useState('');
@@ -25,31 +16,20 @@ const BalanceOperation = ({ deviceId, placeId, currentBalance, onBalanceUpdate }
   const [loading, setLoading] = useState(false);
   const [usePinpad, setUsePinpad] = useState(false);
 
-  /**
-   * Валидация суммы
-   * Проверяет, что сумма:
-   * - не пустая
-   * - является положительным числом
-   * - имеет максимум 2 знака после запятой
-   */
   const validateAmount = (value) => {
     if (!value || value.trim() === '') {
       return 'Поле суммы не может быть пустым';
     }
 
-    // Проверка на число
     const numValue = parseFloat(value);
     if (isNaN(numValue)) {
       return 'Введите корректное число';
     }
 
-    // Проверка на положительное число
     if (numValue <= 0) {
       return 'Сумма должна быть положительным числом';
     }
 
-    // Проверка на максимум 2 знака после запятой
-    // Используем регулярное выражение для проверки формата
     const decimalRegex = /^\d+(\.\d{1,2})?$/;
     if (!decimalRegex.test(value)) {
       return 'Сумма может содержать максимум 2 знака после запятой';
@@ -58,22 +38,14 @@ const BalanceOperation = ({ deviceId, placeId, currentBalance, onBalanceUpdate }
     return null;
   };
 
-  /**
-   * Обработка изменения суммы с валидацией в реальном времени
-   */
   const handleAmountChange = (value) => {
-    // Разрешаем пустое значение, цифры, точку и запятую
     if (value === '' || /^\d*[.,]?\d*$/.test(value)) {
-      // Заменяем запятую на точку для единообразия
       const normalizedValue = value.replace(',', '.');
       setAmount(normalizedValue);
-      setError(''); // Очищаем ошибку при вводе
+      setError('');
     }
   };
 
-  /**
-   * Выполнение операции пополнения баланса
-   */
   const handleDeposit = async () => {
     const validationError = validateAmount(amount);
     if (validationError) {
@@ -101,9 +73,6 @@ const BalanceOperation = ({ deviceId, placeId, currentBalance, onBalanceUpdate }
     }
   };
 
-  /**
-   * Выполнение операции снятия с баланса
-   */
   const handleWithdraw = async () => {
     const validationError = validateAmount(amount);
     if (validationError) {
@@ -113,7 +82,6 @@ const BalanceOperation = ({ deviceId, placeId, currentBalance, onBalanceUpdate }
 
     const withdrawAmount = parseFloat(amount);
 
-    // Дополнительная проверка на достаточность средств
     if (withdrawAmount > currentBalance) {
       setError('Недостаточно средств на балансе');
       return;
@@ -123,7 +91,6 @@ const BalanceOperation = ({ deviceId, placeId, currentBalance, onBalanceUpdate }
     setError('');
 
     try {
-      // Передаем отрицательное значение для снятия (delta)
       const delta = -withdrawAmount;
       const result = await updatePlaceBalance(deviceId, placeId, delta);
 
@@ -140,9 +107,6 @@ const BalanceOperation = ({ deviceId, placeId, currentBalance, onBalanceUpdate }
     }
   };
 
-  /**
-   * Обработка ввода с пинпада
-   */
   const handlePinpadInput = (value) => {
     handleAmountChange(value);
   };
@@ -201,23 +165,25 @@ const BalanceOperation = ({ deviceId, placeId, currentBalance, onBalanceUpdate }
         </Alert>
       )}
 
-      <Row className="g-2">
-        <Col xs={6}>
+      <Row className="g-2 balance-operation-buttons">
+        <Col xs={12} sm={6}>
           <Button
             variant="success"
             className="w-100"
             onClick={handleDeposit}
             disabled={loading || !amount}
+            size="lg"
           >
             {loading ? '...' : 'Внести (Deposit)'}
           </Button>
         </Col>
-        <Col xs={6}>
+        <Col xs={12} sm={6}>
           <Button
             variant="warning"
             className="w-100"
             onClick={handleWithdraw}
             disabled={loading || !amount}
+            size="lg"
           >
             {loading ? '...' : 'Снять (Withdraw)'}
           </Button>
@@ -228,4 +194,3 @@ const BalanceOperation = ({ deviceId, placeId, currentBalance, onBalanceUpdate }
 };
 
 export default BalanceOperation;
-
